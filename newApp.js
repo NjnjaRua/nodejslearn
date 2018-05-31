@@ -1,58 +1,41 @@
 //Init
 var {config} = require('./config');
 var express = require('express');
-var getApp = express();
-var putApp = express();
-var postApp = express();
-var deleteApp = express();
 
+//config Port
+var conUserHttp = express();
+conUserHttp.listen(config.user.http.port, () =>{
+    console.log("UserHTTP listening port " + config.user.http.port);
+});
+
+//var conUserWebSocket = 
+//listen from
+
+var conAdmin = express();
+conAdmin.listen(config.admin.port,()=>{
+    console.log("Admin listening port " + config.admin.port);
+});
+
+/*Update Content*/
 //Add User
-//http://localhost:8081/user?userName=7777&score=7
-putApp.put(config.user.http.path, (req, res) =>
+conUserHttp.put('/user', (req, res) =>
 {
-    var userName = req.query.userName;
-    var score = req.query.score;
-    res.send('You have added ' + userName + " - " + score);
+    res.send('Create user Success');
 });
-
-putApp.listen(config.user.http.putPort, () =>
-{
-    console.log('PutApp listening on port "' + config.user.http.putPort + '"!');
-});
-
 //Get User
-//http://localhost:8080/user?userName=ABC&score=1
-getApp.get(config.user.http.path, (req, res) =>
+conUserHttp.get('/user/:userId', (req, res) =>
 {
-    var userName = req.query.userName;
-    var score = req.query.score;
-    res.send('Get info of ' + userName + ';' + score);
+    res.send('Get user info Success');
 });
-getApp.listen(config.user.http.getPort, () => console.log('GetApp listening on port "' + config.user.http.getPort + '"!'));
 
 //Post User
-//http://localhost:8082/user?userName=ABC&score=1
-postApp.post(config.user.http.path, (req, res) =>
+conUserHttp.post('/user/:userId', (req, res) =>
 {
-    var userName = req.query.userName;
-    var score = req.query.score;
-    res.send('You have updated of ' + userName + " - " + score);
-});
-postApp.listen(config.user.http.posPort, () =>
-{
-    console.log('postApp listening on port "' + config.user.http.posPort + '"!');
+    res.send('Update user success');
 });
 
-//Delete User
-//http://localhost:8083/user?userName=ABC&score=1
-deleteApp.delete(config.user.http.path, (req, res) =>
+//Delete Use
+conAdmin.delete('/user/:userId', (req, res) =>
 {
-    var userName = req.query.userName;
-    var score = req.query.score;
-    res.send('You have deleted of ' + userName + " - " + score);
-    //res.send("Delete is success");
-});
-deleteApp.listen(config.user.http.deletePort, () =>
-{
-    console.log('deleteApp listening on port "' + config.user.http.deletePort + '"!');
+    res.send('Delege user success');
 });
