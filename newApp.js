@@ -8,8 +8,11 @@ conUserHttp.listen(config.user.http.port, () =>{
     console.log("UserHTTP listening port " + config.user.http.port);
 });
 
-//var conUserWebSocket = 
-//listen from
+var conUserWebSocket = require('ws');
+var wss = new conUserWebSocket.Server({ port: 8001});
+wss.on('connection', function connection(ws) {
+    console.log('client connect');
+});
 
 var conAdmin = express();
 conAdmin.listen(config.admin.port,()=>{
@@ -31,6 +34,8 @@ conUserHttp.get('/user/:userId', (req, res) =>
 //Post User
 conUserHttp.post('/user/:userId', (req, res) =>
 {
+    var id = req.params.userId;
+    sendWsMsg(id);
     res.send('Update user success');
 });
 
@@ -39,3 +44,11 @@ conAdmin.delete('/user/:userId', (req, res) =>
 {
     res.send('Delege user success');
 });
+
+function sendWsMsg(content)
+{
+    for(var client of wss.clients)
+    {
+        client.send(content);
+    }
+}
